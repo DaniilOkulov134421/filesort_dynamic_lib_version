@@ -78,11 +78,60 @@ TEST(main_test, sort_files){
 	qsort_recursive(raw);
 	ASSERT_TRUE(raw == expected_sorted);
 }
-	
-	
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	const size_t kFileSize = 40;
+	int * input_data = new int[kFileSize];
+
+    const char * input_path = TEST_PATH;
+	ReadFile(input_path, input_data, kFileSize);
+
+	try {
+		qsort_recursive(input_data);
+	}
+	catch (const char * exception)
+	{
+		std::cerr << exception;
+	}
+
+	const char* output_path = TEST_PATH;
+	WriteFile(output_path, input_data, kFileSize);
+
+    delete[] input_data;
+
+	try{
+		::testing::InitGoogleTest(&argc, argv);
+		return RUN_ALL_TESTS();
+	}
+	catch(const char * exception)
+	{
+		std::cerr << exception;
+	}
+}
+
+void qsort_recursive(String & raw) {
+	#ifdef DEBUG_FLAG
+		const char * path_lib = "../src/sort_lib/Debug/sort_lib.dll";
+	#else
+		const char * path_lib = "../src/sort_lib/Release/sort_lib.dll";
+	#endif
+
+	HINSTANCE hinst_lib = LoadLibrary(path_lib);
+
+	if (!hinst_lib){
+		throw "Error: can't find sort_lib.dll\n";
+	}
+
+	static _qsort_reqursive DllFunc =
+		(_qsort_reqursive)GetProcAddress(hinst_lib, "qsort_recursive");
+
+	if (!DllFunc){
+		throw "Error: can't find function\n";
+	}
+	else{
+		DllFunc(left_edge, right_edge);
+	}
+
+	FreeLibrary(hinst_lib);
 }
