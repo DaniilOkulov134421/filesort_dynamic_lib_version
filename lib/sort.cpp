@@ -1,4 +1,4 @@
-#include "sort.h"
+﻿#include "sort.h"
 
 /****RECURSIVE****/
 
@@ -29,7 +29,8 @@ void internal_qsort_recursive(
 }
 
 void qsort_recursive(String & raw) {
-	internal_qsort_recursive(raw.begin(), raw.end() - 1);
+	if(raw.size() > 0)
+		internal_qsort_recursive(raw.begin(), raw.end() - 1);
 }
 
 void file_read(const String path_to_file, String & data) {
