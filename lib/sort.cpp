@@ -1,5 +1,9 @@
 ﻿#include "sort.h"
 
+template<class Type>
+using Vector = std::vector<Type>;
+using String = std::string;
+
 /****RECURSIVE****/
 
 void internal_qsort_recursive(
@@ -32,34 +36,3 @@ void qsort_recursive(String & raw) {
 	if(raw.size() > 0)
 		internal_qsort_recursive(raw.begin(), raw.end() - 1);
 }
-
-void file_read(const String path_to_file, String & data) {
-	std::ifstream f;
-  f.open(path_to_file, std::ios::in);//точный адрес хранения необходимого файла
-  if (f)
-    while(!f.eof())
-      f>>data;
-  else
-    std::cout <<"Error!\n";
-  f.close();
-}
-
-void file_write(const String path_to_file, String & data) {
-	std::ofstream n;
-  n.open(path_to_file, std::ios::out);;//удаляем данные о предыдущем файле
-  if (!(n.is_open()))
-    std::cout << "File not find\n";
-  else {
-    n<<data;//перезаписываем файл
-    n.close();
-  }
-}
-
-void sort_file(const String path_to_file)
-{
-  String unsorted;
-  file_read(TEST_PATH, unsorted);
-  qsort_recursive(unsorted);
-  file_write(TEST_PATH, unsorted);
-}
-    

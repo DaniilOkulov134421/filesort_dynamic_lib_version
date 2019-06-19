@@ -1,13 +1,9 @@
-#include <iostream>
-#include <fstream>
+#ifndef _SORT_H_
+#define _SORT_H_
+
 #include <vector>
 #include <string>
-#include <stdlib.h>
 
-template<class Type>
-using Vector = std::vector<Type>;
-using String = std::string;
+void qsort_recursive(std::string & raw);
 
-static const String TEST_PATH = "cpp.txt";
-
-void qsort_recursive(String & raw);
+#endif// _SORT_H_

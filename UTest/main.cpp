@@ -4,6 +4,9 @@ static const int
 	V_SIZE = 10,
 	RAND_ORDER = (V_SIZE * 1000000); //for numbers < 1000
 
+using String = std::string;
+static const String TEST_PATH = "cpp.txt";
+
 String
 	unsorted = "ibgehacfdj",
 	expected_sorted = "abcdefghij",
@@ -79,26 +82,46 @@ TEST(main_test, sort_files){
 	ASSERT_TRUE(raw == expected_sorted);
 }
 
+void file_read(const String path_to_file, String & data) {
+	std::ifstream f;
+  f.open(path_to_file, std::ios::in);//точный адрес хранения необходимого файла
+  if (f)
+    while(!f.eof())
+      f>>data;
+  else
+    std::cout <<"Error!\n";
+  f.close();
+}
+
+void file_write(const String path_to_file, String & data) {
+	std::ofstream n;
+  n.open(path_to_file, std::ios::out);;//удаляем данные о предыдущем файле
+  if (!(n.is_open()))
+    std::cout << "File not find\n";
+  else {
+    n<<data;//перезаписываем файл
+    n.close();
+  }
+}
+
+void sort_file(const String path_to_file)
+{
+  String unsorted_local;
+  file_write(TEST_PATH, unsorted);
+  file_read(TEST_PATH, unsorted_local);
+  qsort_recursive(unsorted_local);
+  file_write(TEST_PATH, unsorted_local);
+}
+
 int main(int argc, char ** argv)
 {
-	const size_t kFileSize = 40;
-	int * input_data = new int[kFileSize];
-
-    const char * input_path = TEST_PATH;
-	ReadFile(input_path, input_data, kFileSize);
-
 	try {
-		qsort_recursive(input_data);
+		sort_file(TEST_PATH);
 	}
 	catch (const char * exception)
 	{
 		std::cerr << exception;
 	}
-
-	const char* output_path = TEST_PATH;
-	WriteFile(output_path, input_data, kFileSize);
-
-    delete[] input_data;
 
 	try{
 		::testing::InitGoogleTest(&argc, argv);
@@ -112,15 +135,15 @@ int main(int argc, char ** argv)
 
 void qsort_recursive(String & raw) {
 	#ifdef DEBUG_FLAG
-		const char * path_lib = "../src/sort_lib/Debug/sort_lib.dll";
+		const char * path_lib = "lib/Debug/sort.dll";
 	#else
-		const char * path_lib = "../src/sort_lib/Release/sort_lib.dll";
+		const char * path_lib = "lib/Release/sort.dll";
 	#endif
 
 	HINSTANCE hinst_lib = LoadLibrary(path_lib);
 
 	if (!hinst_lib){
-		throw "Error: can't find sort_lib.dll\n";
+		throw "Error: can't find sort.dll\n";
 	}
 
 	static _qsort_reqursive DllFunc =
