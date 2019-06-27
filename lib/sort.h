@@ -1,9 +1,0 @@
-#ifndef _SORT_H_
-#define _SORT_H_
-
-#include <vector>
-#include <string>
-
-void qsort_recursive(std::string & raw);
-
-#endif// _SORT_H_
